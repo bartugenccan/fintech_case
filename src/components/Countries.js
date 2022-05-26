@@ -5,6 +5,9 @@ import axios from "axios";
 import { Table, Spinner } from "react-bootstrap";
 import Search from "./Search";
 
+// Helpers
+import { isObject } from "../helpers";
+
 const Countries = () => {
   // data
   const [countries, setCountries] = useState([]);
@@ -25,23 +28,52 @@ const Countries = () => {
     getCountries()
       .then((resp) => {
         setCountries(resp.data);
-        console.log(resp.data);
+        // console.log(resp.data.slice(0, 1));
       })
       .finally(() => setLoading(false));
   }, []);
 
   const searchJSON = (searchValue) => {
-    if (jsonSearchTerm != "") setJsonSearchTerm("");
+    if (jsonSearchTerm !== "") setJsonSearchTerm("");
     setJsonSearchTerm(searchValue);
 
+    let filteredCountries;
+
     if (searchValue) {
-      const filteredCountries = countries.filter((country) =>
-        Object.values(country)
-          .join("")
-          .toLowerCase()
-          .includes(searchValue.toLowerCase())
-      );
+      filteredCountries = countries.filter((country) => {
+        let bigArray = [];
+
+        for (const key in country) {
+          if (Array.isArray(country[key])) {
+            for (const item in country[key]) {
+              if (isObject(country[key][item])) {
+                for (const key2 in country[key][item]) {
+                  bigArray.push(country[key][item][key2]);
+                }
+              } else {
+                bigArray.push(country[key][item]);
+              }
+            }
+          } else if (isObject(country[key])) {
+            for (const subkey in country[key]) {
+              bigArray.push(country[key][subkey]);
+            }
+          } else {
+            bigArray.push(country[key]);
+          }
+        }
+
+        let finalArray = bigArray.filter((item) =>
+          // if (item.toLowerCase().includes(searchValue.toLowerCase())) {
+          //   return item;
+          // }
+          String(item).toLowerCase().includes(searchValue.toLowerCase())
+        );
+
+        return finalArray.length > 0;
+      });
       setFiltered(filteredCountries);
+      console.log(filteredCountries);
     } else {
       setFiltered(countries);
     }
@@ -49,7 +81,7 @@ const Countries = () => {
 
   const searchCapital = (searchValue) => {
     setSearchTerm(searchValue);
-    if (searchTerm != "") setJsonSearchTerm("");
+    if (searchTerm !== "") setJsonSearchTerm("");
 
     if (searchValue) {
       const filteredCountries = countries.filter((country) =>
