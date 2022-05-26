@@ -10,7 +10,11 @@ const Search = ({ searchCapital, searchTerm, searchJSON, jsonSearchTerm }) => {
         placeholder="Search for capital"
         value={searchTerm}
         className="mx-auto mt-5 w-50 text-center"
-        onChange={(e) => searchCapital(e.target.value)}
+        onChange={(e) => {
+          let value = e.target.value;
+          value = value.replace(/[^A-Za-z]/gi, "");
+          searchCapital(value);
+        }}
       />
       <input
         type="search"
@@ -19,7 +23,11 @@ const Search = ({ searchCapital, searchTerm, searchJSON, jsonSearchTerm }) => {
         placeholder="Search for JSON data"
         value={jsonSearchTerm}
         className="mx-auto w-50 mt-2 text-center"
-        onChange={(e) => searchJSON(e.target.value)}
+        onChange={(e) => {
+          let value = e.target.value;
+          value = value.replace(/[^A-Za-z]/gi, "");
+          searchJSON(value);
+        }}
       />
     </>
   );
