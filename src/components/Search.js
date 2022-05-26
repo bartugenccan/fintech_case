@@ -12,7 +12,7 @@ const Search = ({ searchCapital, searchTerm, searchJSON, jsonSearchTerm }) => {
         className="mx-auto mt-5 w-50 text-center"
         onChange={(e) => {
           let value = e.target.value;
-          value = value.replace(/[^A-Za-z]/gi, "");
+          value = value.replace(/[^A-Za-z\s]/g, "");
           searchCapital(value);
         }}
       />
@@ -25,7 +25,7 @@ const Search = ({ searchCapital, searchTerm, searchJSON, jsonSearchTerm }) => {
         className="mx-auto w-50 mt-2 text-center"
         onChange={(e) => {
           let value = e.target.value;
-          value = value.replace(/[^A-Za-z]/gi, "");
+          value = value.replace(/[^A-Za-z\s]/g, "");
           searchJSON(value);
         }}
       />
