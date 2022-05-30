@@ -28,7 +28,6 @@ const Countries = () => {
     getCountries()
       .then((resp) => {
         setCountries(resp.data);
-        // console.log(resp.data.slice(0, 1));
       })
       .finally(() => setLoading(false));
   }, []);
